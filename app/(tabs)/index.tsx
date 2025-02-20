@@ -16,17 +16,19 @@ export default function HomeScreen() {
         className="absolute inset-0 w-full h-full -z-10"
       />
 
-      <View className="flex flex-col justify-between w-full h-full border-solid border-2 border-red-500 p-5">
+      <View className="flex-1 border-solid border-2 border-red-500 p-5">
         <View className="p-6 rounded-md border-solid border-2 border-red-500">
           <Heading className="text-3xl color-black">
             Fiance for the lazy
           </Heading>
         </View>
 
-        <View className="flex-2 items-center justify-center bg-background-50 p-6 rounded-md border-solid border-2 border-red-500">
-          <Button onPress={() => router.push("/explore")}>
-            <Text className="text-2xl font-bold text-white">Start here</Text>
-          </Button>
+        <View className="flex-1 justify-center items-center">
+          <View className="p-6 rounded-md border-solid border-2 border-red-500">
+            <Button onPress={() => router.push("/explore")}>
+              <Text className="text-2xl font-bold text-white">Start here</Text>
+            </Button>
+          </View>
         </View>
       </View>
     </View>
