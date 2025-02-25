@@ -23,14 +23,14 @@ interface Expense {
 interface Currency {
   code: string;
   symbol: string;
-  rate: number; // Exchange rate relative to USD
 }
 
+// Simplified currencies without exchange rates
 const currencies: Currency[] = [
-  { code: "USD", symbol: "$", rate: 1 },
-  { code: "EUR", symbol: "€", rate: 0.84 },
-  { code: "GBP", symbol: "£", rate: 0.72 },
-  { code: "JPY", symbol: "¥", rate: 110.14 },
+  { code: "USD", symbol: "$" },
+  { code: "EUR", symbol: "€" },
+  { code: "GBP", symbol: "£" },
+  { code: "JPY", symbol: "¥" },
 ];
 
 const ExpensePage: React.FC = () => {
@@ -38,10 +38,7 @@ const ExpensePage: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
-  const [newExpense, setNewExpense] = useState({
-    description: "",
-    amount: "",
-  });
+  const [newExpense, setNewExpense] = useState({ description: "", amount: "" });
   const [currentDate, setCurrentDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
   const [currentCurrency, setCurrentCurrency] = useState(currencies[0]);
@@ -117,46 +114,42 @@ const ExpensePage: React.FC = () => {
     });
   };
 
-  const convertAmount = (
-    amount: number,
-    fromCurrency: string,
-    toCurrency: string
-  ) => {
-    const fromRate = currencies.find((c) => c.code === fromCurrency)?.rate || 1;
-    const toRate = currencies.find((c) => c.code === toCurrency)?.rate || 1;
-    return (amount / fromRate) * toRate;
-  };
-
   const currentMonthExpenses = filterExpensesByMonth(currentDate);
-  const totalExpenses = currentMonthExpenses.reduce((sum, expense) => {
-    return (
-      sum +
-      convertAmount(expense.amount, expense.currency, currentCurrency.code)
-    );
-  }, 0);
 
-  const renderExpenseItem = ({ item }: { item: Expense }) => (
-    <View className="bg-white p-4 rounded-md mb-2 shadow-md flex-row justify-between items-center">
-      <View className="flex-1">
-        <Text className="text-lg font-semibold">{item.description}</Text>
-        <Text className="text-base text-green-500">
-          {currentCurrency.symbol}
-          {convertAmount(
-            item.amount,
-            item.currency,
-            currentCurrency.code
-          ).toFixed(2)}
-        </Text>
-        <Text className="text-sm text-gray-500">{item.date}</Text>
-      </View>
-      <TouchableOpacity
-        className="bg-red-500 rounded-full w-8 h-8 justify-center items-center"
-        onPress={() => removeExpense(item.id)}
-      >
-        <Text className="text-white font-bold text-base">X</Text>
-      </TouchableOpacity>
-    </View>
+  // Filter expenses by the current display currency
+  const currentCurrencyExpenses = currentMonthExpenses.filter(
+    (expense) => expense.currency === currentCurrency.code
   );
+
+  // Calculate total of expenses in the current currency only
+  const totalExpenses = currentCurrencyExpenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+
+  const renderExpenseItem = ({ item }: { item: Expense }) => {
+    // Only show expenses in the selected currency
+    if (item.currency !== currentCurrency.code) return null;
+
+    return (
+      <View className="bg-white p-4 rounded-md mb-2 shadow-md flex-row justify-between items-center">
+        <View className="flex-1">
+          <Text className="text-lg font-semibold">{item.description}</Text>
+          <Text className="text-base text-green-500">
+            {currentCurrency.symbol}
+            {item.amount.toFixed(2)}
+          </Text>
+          <Text className="text-sm text-gray-500">{item.date}</Text>
+        </View>
+        <TouchableOpacity
+          className="bg-red-500 rounded-full w-8 h-8 justify-center items-center"
+          onPress={() => removeExpense(item.id)}
+        >
+          <Text className="text-white font-bold text-base">X</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const changeMonth = (increment: number) => {
     const newDate = new Date(currentDate);
@@ -316,12 +309,20 @@ const ExpensePage: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={currentMonthExpenses}
-        renderItem={renderExpenseItem}
-        keyExtractor={(item) => item.id}
-        className="flex-1"
-      />
+      {currentCurrencyExpenses.length > 0 ? (
+        <FlatList
+          data={currentMonthExpenses}
+          renderItem={renderExpenseItem}
+          keyExtractor={(item) => item.id}
+          className="flex-1"
+        />
+      ) : (
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-lg text-gray-500">
+            No expenses in {currentCurrency.code} for this month
+          </Text>
+        </View>
+      )}
 
       <TouchableOpacity
         className="bg-blue-500 p-4 rounded-md items-center mt-3"
