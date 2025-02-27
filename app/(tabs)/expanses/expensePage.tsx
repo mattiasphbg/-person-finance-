@@ -11,14 +11,13 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-
-interface Expense {
-  id: string;
-  description: string;
-  amount: number;
-  date: string;
-  currency: string;
-}
+import {
+  saveExpenses,
+  getExpenses,
+  saveSelectedCurrency,
+  getSelectedCurrency,
+  Expense,
+} from "@/lib/storage"; // Adjust path as needed
 
 interface Currency {
   code: string;
@@ -33,7 +32,7 @@ const currencies: Currency[] = [
   { code: "JPY", symbol: "¥" },
 ];
 
-const ExpensePage: React.FC = () => {
+export default function ExpensePage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -43,48 +42,63 @@ const ExpensePage: React.FC = () => {
   const [tempDate, setTempDate] = useState(new Date());
   const [currentCurrency, setCurrentCurrency] = useState(currencies[0]);
 
+  // Load data from MMKV storage on component mount
   useEffect(() => {
-    // In a real app, you would fetch expenses from storage or an API here
-    const sampleExpenses: Expense[] = [
-      {
-        id: "1",
-        description: "Groceries",
-        amount: 50.0,
-        date: "2025-02-24",
-        currency: "USD",
-      },
-      {
-        id: "2",
-        description: "Gas",
-        amount: 30.0,
-        date: "2025-02-23",
-        currency: "USD",
-      },
-      {
-        id: "3",
-        description: "Movie tickets",
-        amount: 25.0,
-        date: "2025-02-22",
-        currency: "USD",
-      },
-      {
-        id: "4",
-        description: "Dinner",
-        amount: 40.0,
-        date: "2024-01-15",
-        currency: "USD",
-      },
-      {
-        id: "5",
-        description: "Books",
-        amount: 35.0,
-        date: "2025-03-05",
-        currency: "USD",
-      },
-    ];
-    setExpenses(sampleExpenses);
+    // Load saved expenses
+    const savedExpenses = getExpenses();
+    if (savedExpenses.length > 0) {
+      setExpenses(savedExpenses);
+    } else {
+      // If no saved expenses, use sample data
+      const sampleExpenses: Expense[] = [
+        {
+          id: "1",
+          description: "Groceries",
+          amount: 50.0,
+          date: "2025-02-24",
+          currency: "USD",
+        },
+        {
+          id: "2",
+          description: "Gas",
+          amount: 30.0,
+          date: "2025-02-23",
+          currency: "USD",
+        },
+        {
+          id: "3",
+          description: "Movie tickets",
+          amount: 25.0,
+          date: "2025-02-22",
+          currency: "USD",
+        },
+        {
+          id: "4",
+          description: "Dinner",
+          amount: 40.0,
+          date: "2024-01-15",
+          currency: "USD",
+        },
+        {
+          id: "5",
+          description: "Books",
+          amount: 35.0,
+          date: "2025-03-05",
+          currency: "USD",
+        },
+      ];
+      setExpenses(sampleExpenses);
+      saveExpenses(sampleExpenses); // Save sample data to storage
+    }
+
+    // Load saved currency preference
+    const savedCurrencyCode = getSelectedCurrency();
+    const savedCurrency =
+      currencies.find((c) => c.code === savedCurrencyCode) || currencies[0];
+    setCurrentCurrency(savedCurrency);
   }, []);
 
+  // Modified to save to MMKV storage
   const addExpense = () => {
     if (newExpense.description && newExpense.amount) {
       const expense: Expense = {
@@ -94,14 +108,21 @@ const ExpensePage: React.FC = () => {
         date: currentDate.toISOString().split("T")[0],
         currency: currentCurrency.code,
       };
-      setExpenses([expense, ...expenses]);
+
+      const updatedExpenses = [expense, ...expenses];
+      setExpenses(updatedExpenses);
+      saveExpenses(updatedExpenses); // Save to MMKV
+
       setNewExpense({ description: "", amount: "" });
       setModalVisible(false);
     }
   };
 
+  // Modified to save to MMKV storage
   const removeExpense = (id: string) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
+    const updatedExpenses = expenses.filter((expense) => expense.id !== id);
+    setExpenses(updatedExpenses);
+    saveExpenses(updatedExpenses); // Save to MMKV
   };
 
   const filterExpensesByMonth = (date: Date) => {
@@ -126,6 +147,13 @@ const ExpensePage: React.FC = () => {
     (sum, expense) => sum + expense.amount,
     0
   );
+
+  // Modified to save currency preference to MMKV
+  const selectCurrency = (currency: Currency) => {
+    setCurrentCurrency(currency);
+    saveSelectedCurrency(currency.code); // Save to MMKV
+    setCurrencyPickerVisible(false);
+  };
 
   const renderExpenseItem = ({ item }: { item: Expense }) => {
     // Only show expenses in the selected currency
@@ -256,10 +284,7 @@ const ExpensePage: React.FC = () => {
                 ? "bg-blue-500 rounded-md"
                 : ""
             }`}
-            onPress={() => {
-              setCurrentCurrency(currency);
-              setCurrencyPickerVisible(false);
-            }}
+            onPress={() => selectCurrency(currency)}
           >
             <Text
               className={
@@ -331,6 +356,7 @@ const ExpensePage: React.FC = () => {
         <Text className="text-white font-bold text-lg">Add Expense</Text>
       </TouchableOpacity>
 
+      {/* Modals remain unchanged */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -416,6 +442,4 @@ const ExpensePage: React.FC = () => {
       </Modal>
     </View>
   );
-};
-
-export default ExpensePage;
+}
