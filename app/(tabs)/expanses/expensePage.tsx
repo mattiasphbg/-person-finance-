@@ -41,65 +41,80 @@ export default function ExpensePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
   const [currentCurrency, setCurrentCurrency] = useState(currencies[0]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load data from MMKV storage on component mount
   useEffect(() => {
-    // Load saved expenses
-    const savedExpenses = getExpenses();
-    if (savedExpenses.length > 0) {
-      setExpenses(savedExpenses);
-    } else {
-      // If no saved expenses, use sample data
-      const sampleExpenses: Expense[] = [
-        {
-          id: "1",
-          description: "Groceries",
-          amount: 50.0,
-          date: "2025-02-24",
-          currency: "USD",
-        },
-        {
-          id: "2",
-          description: "Gas",
-          amount: 30.0,
-          date: "2025-02-23",
-          currency: "USD",
-        },
-        {
-          id: "3",
-          description: "Movie tickets",
-          amount: 25.0,
-          date: "2025-02-22",
-          currency: "USD",
-        },
-        {
-          id: "4",
-          description: "Dinner",
-          amount: 40.0,
-          date: "2024-01-15",
-          currency: "USD",
-        },
-        {
-          id: "5",
-          description: "Books",
-          amount: 35.0,
-          date: "2025-03-05",
-          currency: "USD",
-        },
-      ];
-      setExpenses(sampleExpenses);
-      saveExpenses(sampleExpenses); // Save sample data to storage
-    }
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        // Load saved expenses
+        const savedExpenses = await getExpenses();
 
-    // Load saved currency preference
-    const savedCurrencyCode = getSelectedCurrency();
-    const savedCurrency =
-      currencies.find((c) => c.code === savedCurrencyCode) || currencies[0];
-    setCurrentCurrency(savedCurrency);
+        if (savedExpenses.length > 0) {
+          setExpenses(savedExpenses);
+        } else {
+          // If no saved expenses, use sample data
+          const sampleExpenses: Expense[] = [
+            {
+              id: "1",
+              description: "Groceries",
+              amount: 50.0,
+              date: "2025-02-24",
+              currency: "USD",
+            },
+            {
+              id: "2",
+              description: "Gas",
+              amount: 30.0,
+              date: "2025-02-23",
+              currency: "USD",
+            },
+            {
+              id: "3",
+              description: "Movie tickets",
+              amount: 25.0,
+              date: "2025-02-22",
+              currency: "USD",
+            },
+            {
+              id: "4",
+              description: "Dinner",
+              amount: 40.0,
+              date: "2024-01-15",
+              currency: "USD",
+            },
+            {
+              id: "5",
+              description: "Books",
+              amount: 35.0,
+              date: "2025-03-05",
+              currency: "USD",
+            },
+          ];
+          setExpenses(sampleExpenses);
+          await saveExpenses(sampleExpenses); // Save sample data to storage
+        }
+
+        // Load saved currency preference
+        const savedCurrencyCode = await getSelectedCurrency();
+        if (savedCurrencyCode) {
+          const savedCurrency =
+            currencies.find((c) => c.code === savedCurrencyCode) ||
+            currencies[0];
+          setCurrentCurrency(savedCurrency);
+        }
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
-  // Modified to save to MMKV storage
-  const addExpense = () => {
+  // Modified to save to AsyncStorage
+  const addExpense = async () => {
     if (newExpense.description && newExpense.amount) {
       const expense: Expense = {
         id: Date.now().toString(),
@@ -111,18 +126,18 @@ export default function ExpensePage() {
 
       const updatedExpenses = [expense, ...expenses];
       setExpenses(updatedExpenses);
-      saveExpenses(updatedExpenses); // Save to MMKV
+      await saveExpenses(updatedExpenses); // Save to AsyncStorage
 
       setNewExpense({ description: "", amount: "" });
       setModalVisible(false);
     }
   };
 
-  // Modified to save to MMKV storage
-  const removeExpense = (id: string) => {
+  // Modified to save to AsyncStorage
+  const removeExpense = async (id: string) => {
     const updatedExpenses = expenses.filter((expense) => expense.id !== id);
     setExpenses(updatedExpenses);
-    saveExpenses(updatedExpenses); // Save to MMKV
+    await saveExpenses(updatedExpenses); // Save to AsyncStorage
   };
 
   const filterExpensesByMonth = (date: Date) => {
@@ -148,10 +163,10 @@ export default function ExpensePage() {
     0
   );
 
-  // Modified to save currency preference to MMKV
-  const selectCurrency = (currency: Currency) => {
+  // Modified to save currency preference to AsyncStorage
+  const selectCurrency = async (currency: Currency) => {
     setCurrentCurrency(currency);
-    saveSelectedCurrency(currency.code); // Save to MMKV
+    await saveSelectedCurrency(currency.code); // Save to AsyncStorage
     setCurrencyPickerVisible(false);
   };
 
@@ -300,6 +315,15 @@ export default function ExpensePage() {
       </ScrollView>
     );
   };
+
+  // Add a loading indicator
+  if (isLoading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text>Loading expenses...</Text>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 p-5 bg-gray-100">
