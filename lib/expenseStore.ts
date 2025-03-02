@@ -1,11 +1,15 @@
 // stores/expenseStore.ts
+"use client";
+
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  Expense,
   saveExpenses,
   getExpenses,
   saveSelectedCurrency,
   getSelectedCurrency,
-  Expense,
 } from "@/lib/storage";
 
 interface Currency {
@@ -21,36 +25,30 @@ const currencies: Currency[] = [
 ];
 
 interface ExpenseState {
-  // Data
   expenses: Expense[];
   currentCurrency: Currency;
   currentDate: Date;
   tempDate: Date;
-
-  // UI state
   modalVisible: boolean;
   datePickerVisible: boolean;
   currencyPickerVisible: boolean;
   newExpense: { description: string; amount: string };
   isLoading: boolean;
 
-  // Actions
-  setExpenses: (expenses: Expense[]) => void;
-  addExpense: () => void;
-  removeExpense: (id: string) => void;
   setModalVisible: (visible: boolean) => void;
   setDatePickerVisible: (visible: boolean) => void;
   setCurrencyPickerVisible: (visible: boolean) => void;
   setNewExpense: (expense: { description: string; amount: string }) => void;
   setCurrentDate: (date: Date) => void;
   setTempDate: (date: Date) => void;
-  selectCurrency: (currency: Currency) => void;
+  addExpense: () => Promise<void>;
+  removeExpense: (id: string) => Promise<void>;
+  selectCurrency: (currency: Currency) => Promise<void>;
   changeMonth: (increment: number) => void;
   initializeStore: () => Promise<void>;
 }
 
 export const useExpenseStore = create<ExpenseState>((set, get) => ({
-  // Initial state
   expenses: [],
   currentCurrency: currencies[0],
   currentDate: new Date(),
@@ -61,8 +59,13 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
   newExpense: { description: "", amount: "" },
   isLoading: true,
 
-  // Actions
-  setExpenses: (expenses) => set({ expenses }),
+  setModalVisible: (visible) => set({ modalVisible: visible }),
+  setDatePickerVisible: (visible) => set({ datePickerVisible: visible }),
+  setCurrencyPickerVisible: (visible) =>
+    set({ currencyPickerVisible: visible }),
+  setNewExpense: (expense) => set({ newExpense: expense }),
+  setCurrentDate: (date) => set({ currentDate: date }),
+  setTempDate: (date) => set({ tempDate: date }),
 
   addExpense: async () => {
     const { newExpense, expenses, currentDate, currentCurrency } = get();
@@ -94,14 +97,6 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
     await saveExpenses(updatedExpenses);
   },
 
-  setModalVisible: (visible) => set({ modalVisible: visible }),
-  setDatePickerVisible: (visible) => set({ datePickerVisible: visible }),
-  setCurrencyPickerVisible: (visible) =>
-    set({ currencyPickerVisible: visible }),
-  setNewExpense: (expense) => set({ newExpense: expense }),
-  setCurrentDate: (date) => set({ currentDate: date }),
-  setTempDate: (date) => set({ tempDate: date }),
-
   selectCurrency: async (currency) => {
     set({ currentCurrency: currency, currencyPickerVisible: false });
     await saveSelectedCurrency(currency.code);
@@ -123,9 +118,43 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
       if (savedExpenses.length > 0) {
         set({ expenses: savedExpenses });
       } else {
-        // Sample data implementation
+        // Sample data
         const sampleExpenses: Expense[] = [
-          // Your sample data here
+          {
+            id: "1",
+            description: "Groceries",
+            amount: 50.0,
+            date: "2025-02-24",
+            currency: "USD",
+          },
+          {
+            id: "2",
+            description: "Gas",
+            amount: 30.0,
+            date: "2025-02-23",
+            currency: "USD",
+          },
+          {
+            id: "3",
+            description: "Movie tickets",
+            amount: 25.0,
+            date: "2025-02-22",
+            currency: "USD",
+          },
+          {
+            id: "4",
+            description: "Dinner",
+            amount: 40.0,
+            date: "2024-01-15",
+            currency: "USD",
+          },
+          {
+            id: "5",
+            description: "Books",
+            amount: 35.0,
+            date: "2025-03-05",
+            currency: "USD",
+          },
         ];
         set({ expenses: sampleExpenses });
         await saveExpenses(sampleExpenses);
