@@ -67,7 +67,7 @@ const expensePage = () => {
     },
   };
 
-  // Expense tracking state
+ 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [currentCurrency, setCurrentCurrency] = useState<Currency>({
     code: "USD",
@@ -84,9 +84,9 @@ const expensePage = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize with some sample data
+ 
   useEffect(() => {
-    // Simulating loading data from storage
+   
     setTimeout(() => {
       setExpenses([
         {
@@ -115,7 +115,7 @@ const expensePage = () => {
     }, 1000);
   }, []);
 
-  // Expense functions
+
   const filterExpensesByMonth = (date: Date) => {
     return expenses.filter((expense) => {
       const expenseDate = new Date(expense.date);
