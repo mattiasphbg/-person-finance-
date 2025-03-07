@@ -67,7 +67,6 @@ const expensePage = () => {
     },
   };
 
- 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [currentCurrency, setCurrentCurrency] = useState<Currency>({
     code: "USD",
@@ -84,9 +83,7 @@ const expensePage = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
- 
   useEffect(() => {
-   
     setTimeout(() => {
       setExpenses([
         {
@@ -114,7 +111,6 @@ const expensePage = () => {
       setIsLoading(false);
     }, 1000);
   }, []);
-
 
   const filterExpensesByMonth = (date: Date) => {
     return expenses.filter((expense) => {

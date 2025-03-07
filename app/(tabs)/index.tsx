@@ -27,7 +27,7 @@ export default function HomeScreen() {
           <View className="p-6 mt-20 ">
             <Button
               className="items-center rounded-[18px] text-eeeee cursor-pointer grid font-roboto text-sm font-medium h-9 text-center uppercase w-44 float-right"
-              onPress={() => router.push("/expanses/expensePage")}
+              onPress={() => router.push("/(tabs)/expense")}
             >
               <Text className="text-2xl font-bold text-white">Start here</Text>
             </Button>

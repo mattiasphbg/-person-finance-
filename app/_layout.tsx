@@ -36,8 +36,12 @@ export default function RootLayout() {
   return (
     <GluestackUIProvider mode="light">
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+
+          {/* Add this line to handle the expenses route outside of tabs */}
+          <Stack.Screen name="expenses" />
+
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

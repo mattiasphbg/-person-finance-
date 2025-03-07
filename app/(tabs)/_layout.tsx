@@ -18,6 +18,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -34,20 +35,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
-          tabBarStyle: {
-            display: "none",
-          },
         }}
       />
+
       <Tabs.Screen
-        name="explore"
+        name="expense"
         options={{
-          title: "Explore",
+          title: "Expense",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="creditcard.circle" color={color} />
           ),
         }}
       />
+
+      {/* Add this to hide the automatically detected route */}
     </Tabs>
   );
 }
