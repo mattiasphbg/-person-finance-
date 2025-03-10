@@ -18,8 +18,6 @@ import {
 } from "@expo/vector-icons";
 import { LineChart } from "react-native-chart-kit";
 
-const screenWidth = Dimensions.get("window").width;
-
 // Define Expense type
 interface Expense {
   id: string;
@@ -36,36 +34,7 @@ interface Currency {
 }
 
 const expensePage = () => {
-  const [netWorth, setNetWorth] = useState(5000);
   const [activeTab, setActiveTab] = useState("dashboard");
-
-  // Sample data for the chart
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        data: [3200, 3700, 4200, 3800, 4500, 5000],
-        color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
-        strokeWidth: 2,
-      },
-    ],
-  };
-
-  const chartConfig = {
-    backgroundGradientFrom: "#ffffff",
-    backgroundGradientTo: "#ffffff",
-    decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "#4834d4",
-    },
-  };
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [currentCurrency, setCurrentCurrency] = useState<Currency>({
@@ -325,7 +294,6 @@ const expensePage = () => {
     );
   };
 
-  // Render the dashboard tab
   const renderDashboard = () => {
     return (
       <>
@@ -336,9 +304,7 @@ const expensePage = () => {
             <Text className="text-sm text-gray-600 mt-1">
               Current net worth
             </Text>
-            <Text className="text-xl font-semibold text-gray-800 mt-0.5">
-              ${netWorth.toLocaleString()}
-            </Text>
+            <Text className="text-xl font-semibold text-gray-800 mt-0.5"></Text>
           </View>
           <TouchableOpacity className="flex-row items-center bg-indigo-100 px-3 py-1.5 rounded-full">
             <Ionicons name="flag-outline" size={16} color="#4834d4" />
@@ -348,22 +314,6 @@ const expensePage = () => {
 
         {/* Chart Section */}
         <View className="bg-white mx-5 rounded-xl p-2.5 mt-2 shadow">
-          <LineChart
-            data={data}
-            width={screenWidth - 40}
-            height={180}
-            chartConfig={chartConfig}
-            bezier
-            withDots={false}
-            withInnerLines={false}
-            withOuterLines={false}
-            withVerticalLabels={false}
-            withHorizontalLabels={false}
-            style={{
-              borderRadius: 16,
-              paddingRight: 0,
-            }}
-          />
           <View className="absolute top-1/2 right-1/5 w-6 h-6 rounded-full bg-white justify-center items-center shadow-md shadow-indigo-500">
             <View className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
           </View>
