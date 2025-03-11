@@ -10,7 +10,7 @@ import {
 import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 
-export const renderDashboard = () => {
+const renderDashboard = () => {
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
   const chartConfig = {
@@ -185,3 +185,5 @@ export const renderDashboard = () => {
     </>
   );
 };
+
+export default renderDashboard;
