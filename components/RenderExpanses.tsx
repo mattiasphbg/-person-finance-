@@ -1,17 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "./ui/text";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FlatList } from "react-native";
-
-const filterExpensesByMonth = (date: Date) => {
-  return expenses.filter((expense) => {
-    const expenseDate = new Date(expense.date);
-    return (
-      expenseDate.getMonth() === date.getMonth() &&
-      expenseDate.getFullYear() === date.getFullYear()
-    );
-  });
-};
 
 interface Expense {
   id: string;
@@ -27,39 +17,69 @@ interface Currency {
   symbol: string;
 }
 
-const openDatePicker = () => {
-  setTempDate(new Date(currentDate));
-  setDatePickerVisible(true);
-};
+const RenderExpenses = () => {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [currentCurrency, setCurrentCurrency] = useState<Currency>({
+    code: "USD",
+    symbol: "$",
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [tempDate, setTempDate] = useState<Date>(new Date());
+  const [modalVisible, setModalVisible] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
+  const [newExpense, setNewExpense] = useState({
+    description: "",
+    amount: "",
+  });
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const openDatePicker = () => {
+    setTempDate(new Date(currentDate));
+    setDatePickerVisible(true);
+  };
 
-const changeMonth = (delta: number) => {
-  const newDate = new Date(currentDate);
-  newDate.setMonth(newDate.getMonth() + delta);
-  setCurrentDate(newDate);
-};
-const removeExpense = (id: string) => {
-  setExpenses(expenses.filter((expense) => expense.id !== id));
-};
+  useEffect(() => {
+    setTimeout(() => {
+      setExpenses([
+        {
+          id: "1",
+          description: "Groceries",
+          amount: 85.75,
+          date: new Date().toISOString(),
+          currency: "USD",
+        },
+        {
+          id: "2",
+          description: "Dinner",
+          amount: 42.5,
+          date: new Date().toISOString(),
+          currency: "USD",
+        },
+        {
+          id: "3",
+          description: "Movie tickets",
+          amount: 24.0,
+          date: new Date().toISOString(),
+          currency: "USD",
+        },
+      ]);
+      setIsLoading(false);
+    }, 1000);
+  }, []);
 
-const [currentDate, setCurrentDate] = useState<Date>(new Date());
-const currentMonthExpenses = filterExpensesByMonth(currentDate);
-const [expenses, setExpenses] = useState<Expense[]>([]);
-const [currentCurrency, setCurrentCurrency] = useState<Currency>({
-  code: "USD",
-  symbol: "$",
-});
-const [tempDate, setTempDate] = useState<Date>(new Date());
-const [modalVisible, setModalVisible] = useState(false);
-const [datePickerVisible, setDatePickerVisible] = useState(false);
-const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
-const [newExpense, setNewExpense] = useState({
-  description: "",
-  amount: "",
-});
-const [isLoading, setIsLoading] = useState(true);
-const [activeTab, setActiveTab] = useState("dashboard");
+  const filterExpensesByMonth = (date: Date) => {
+    return expenses.filter((expense) => {
+      const expenseDate = new Date(expense.date);
+      return (
+        expenseDate.getMonth() === date.getMonth() &&
+        expenseDate.getFullYear() === date.getFullYear()
+      );
+    });
+  };
 
-const renderExpenses = () => {
+  const currentMonthExpenses = filterExpensesByMonth(currentDate);
+
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center">
@@ -67,6 +87,16 @@ const renderExpenses = () => {
       </View>
     );
   }
+
+  const changeMonth = (delta: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() + delta);
+    setCurrentDate(newDate);
+  };
+  const removeExpense = (id: string) => {
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  };
+
   const currentCurrencyExpenses = currentMonthExpenses.filter(
     (expense: { currency: string }) => expense.currency === currentCurrency.code
   );
@@ -162,3 +192,5 @@ const renderExpenses = () => {
     </View>
   );
 };
+
+export default RenderExpenses;

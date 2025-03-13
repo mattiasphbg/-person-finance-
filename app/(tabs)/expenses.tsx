@@ -17,6 +17,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 import { LineChart } from "react-native-chart-kit";
+import RenderExpenses from "@/components/RenderExpanses";
 
 // Define Expense type
 interface Expense {
@@ -51,35 +52,6 @@ const expensePage = () => {
     amount: "",
   });
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setExpenses([
-        {
-          id: "1",
-          description: "Groceries",
-          amount: 85.75,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-        {
-          id: "2",
-          description: "Dinner",
-          amount: 42.5,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-        {
-          id: "3",
-          description: "Movie tickets",
-          amount: 24.0,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
 
   const filterExpensesByMonth = (date: Date) => {
     return expenses.filter((expense) => {
@@ -294,110 +266,11 @@ const expensePage = () => {
     );
   };
 
-  // Render the expenses tab
-  const renderExpenses = () => {
-    if (isLoading) {
-      return (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-base text-gray-500">Loading expenses...</Text>
-        </View>
-      );
-    }
-
-    return (
-      <View className="flex-1 p-5">
-        <Text className="text-2xl font-bold mb-4 text-center">
-          Monthly Expenses
-        </Text>
-        <View className="flex-row justify-between items-center mb-4">
-          <TouchableOpacity onPress={() => changeMonth(-1)}>
-            <Text className="text-indigo-600 text-base">← Prev</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={openDatePicker}>
-            <Text className="text-lg font-semibold text-indigo-600">
-              {currentDate.toLocaleString("default", {
-                month: "long",
-                year: "numeric",
-              })}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => changeMonth(1)}>
-            <Text className="text-indigo-600 text-base">Next →</Text>
-          </TouchableOpacity>
-        </View>
-        <View className="flex-row justify-between items-center mb-5">
-          <Text className="text-lg font-bold text-gray-800">
-            Total: {currentCurrency.symbol}
-            {totalExpenses.toFixed(2)}
-          </Text>
-          <TouchableOpacity onPress={() => setCurrencyPickerVisible(true)}>
-            <Text className="text-indigo-600 text-base">
-              {currentCurrency.code} ▼
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {currentCurrencyExpenses.length > 0 ? (
-          <FlatList
-            data={currentMonthExpenses}
-            renderItem={renderExpenseItem}
-            keyExtractor={(item) => item.id}
-            className="flex-1"
-          />
-        ) : (
-          <View className="flex-1 justify-center items-center">
-            <Text className="text-base text-gray-500">
-              No expenses in {currentCurrency.code} for this month
-            </Text>
-          </View>
-        )}
-
-        <TouchableOpacity
-          className="bg-indigo-600 p-4 rounded-xl items-center mt-4"
-          onPress={() => setModalVisible(true)}
-        >
-          <Text className="text-white font-bold text-base">Add Expense</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" />
 
-      {/* Main Content */}
-      {activeTab === "dashboard" ? renderExpenses() : renderExpenses()}
-
-      {/* Bottom Navigation */}
-      <View className="flex-row justify-around py-3 bg-white border-t border-gray-100">
-        <TouchableOpacity
-          className="items-center justify-center w-16"
-          onPress={() => setActiveTab("dashboard")}
-        >
-          <Ionicons
-            name="home"
-            size={24}
-            color={activeTab === "dashboard" ? "#4834d4" : "#888"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="items-center justify-center w-16"
-          onPress={() => setActiveTab("expenses")}
-        >
-          <MaterialCommunityIcons
-            name="cash-multiple"
-            size={24}
-            color={activeTab === "expenses" ? "#4834d4" : "#888"}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity className="items-center justify-center w-16">
-          <Ionicons name="swap-horizontal" size={24} color="#888" />
-        </TouchableOpacity>
-        <TouchableOpacity className="items-center justify-center w-16">
-          <Ionicons name="person-outline" size={24} color="#888" />
-        </TouchableOpacity>
-      </View>
+      {RenderExpenses()}
 
       <Modal
         animationType="slide"
