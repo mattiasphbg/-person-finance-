@@ -365,7 +365,39 @@ const expensePage = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" />
-      {renderExpenses()}
+
+      {/* Main Content */}
+      {activeTab === "dashboard" ? renderExpenses() : renderExpenses()}
+
+      {/* Bottom Navigation */}
+      <View className="flex-row justify-around py-3 bg-white border-t border-gray-100">
+        <TouchableOpacity
+          className="items-center justify-center w-16"
+          onPress={() => setActiveTab("dashboard")}
+        >
+          <Ionicons
+            name="home"
+            size={24}
+            color={activeTab === "dashboard" ? "#4834d4" : "#888"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="items-center justify-center w-16"
+          onPress={() => setActiveTab("expenses")}
+        >
+          <MaterialCommunityIcons
+            name="cash-multiple"
+            size={24}
+            color={activeTab === "expenses" ? "#4834d4" : "#888"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity className="items-center justify-center w-16">
+          <Ionicons name="swap-horizontal" size={24} color="#888" />
+        </TouchableOpacity>
+        <TouchableOpacity className="items-center justify-center w-16">
+          <Ionicons name="person-outline" size={24} color="#888" />
+        </TouchableOpacity>
+      </View>
 
       <Modal
         animationType="slide"
