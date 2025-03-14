@@ -1,7 +1,7 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, FlatList } from "react-native";
 import { Text } from "./ui/text";
-import { useState, useEffect } from "react";
-import { FlatList } from "react-native";
+import { useExpenseStore } from "@/stores/useExpenseStore";
+import { useEffect } from "react";
 
 interface Expense {
   id: string;
@@ -17,55 +17,31 @@ interface Currency {
   symbol: string;
 }
 
+interface RenderExpensesProps {
+  expenses: Expense[];
+  currentDate: Date;
+  currentCurrency: Currency;
+  setModalVisible: (visible: boolean) => void;
+  removeExpense: (id: string) => void;
+  changeMonth: (delta: number) => void;
+  openDatePicker: () => void;
+  setCurrencyPickerVisible: (visible: boolean) => void;
+}
+
 const RenderExpenses = () => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [currentCurrency, setCurrentCurrency] = useState<Currency>({
-    code: "USD",
-    symbol: "$",
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [tempDate, setTempDate] = useState<Date>(new Date());
-  const [modalVisible, setModalVisible] = useState(false);
-  const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
-  const [newExpense, setNewExpense] = useState({
-    description: "",
-    amount: "",
-  });
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const openDatePicker = () => {
-    setTempDate(new Date(currentDate));
-    setDatePickerVisible(true);
-  };
+  const {
+    expenses,
+    currentDate,
+    currentCurrency,
+    removeExpense,
+    setCurrentDate,
+    setCurrentCurrency,
+    isLoading,
+    fetchExpenses,
+  } = useExpenseStore();
 
   useEffect(() => {
-    setTimeout(() => {
-      setExpenses([
-        {
-          id: "1",
-          description: "Groceries",
-          amount: 85.75,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-        {
-          id: "2",
-          description: "Dinner",
-          amount: 42.5,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-        {
-          id: "3",
-          description: "Movie tickets",
-          amount: 24.0,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    fetchExpenses();
   }, []);
 
   const filterExpensesByMonth = (date: Date) => {
@@ -78,7 +54,21 @@ const RenderExpenses = () => {
     });
   };
 
+  const changeMonth = (delta: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() + delta);
+    setCurrentDate(newDate);
+  };
+
   const currentMonthExpenses = filterExpensesByMonth(currentDate);
+  const currentCurrencyExpenses = currentMonthExpenses.filter(
+    (expense) => expense.currency === currentCurrency.code
+  );
+
+  const totalExpenses = currentCurrencyExpenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
 
   if (isLoading) {
     return (
@@ -88,25 +78,7 @@ const RenderExpenses = () => {
     );
   }
 
-  const changeMonth = (delta: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setMonth(newDate.getMonth() + delta);
-    setCurrentDate(newDate);
-  };
-  const removeExpense = (id: string) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  };
-
-  const currentCurrencyExpenses = currentMonthExpenses.filter(
-    (expense: { currency: string }) => expense.currency === currentCurrency.code
-  );
-  const totalExpenses = currentCurrencyExpenses.reduce(
-    (sum: any, expense: { amount: any }) => sum + expense.amount,
-    0
-  );
-
   const renderExpenseItem = ({ item }: { item: Expense }) => {
-    // Only show expenses in the selected currency
     if (item.currency !== currentCurrency.code) return null;
 
     return (
@@ -135,6 +107,10 @@ const RenderExpenses = () => {
     );
   };
 
+  function setModalVisible(arg0: boolean): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <View className="flex-1 p-5">
       <Text className="text-2xl font-bold mb-4 text-center">
@@ -143,14 +119,6 @@ const RenderExpenses = () => {
       <View className="flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={() => changeMonth(-1)}>
           <Text className="text-indigo-600 text-base">← Prev</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={openDatePicker}>
-          <Text className="text-lg font-semibold text-indigo-600">
-            {currentDate.toLocaleString("default", {
-              month: "long",
-              year: "numeric",
-            })}
-          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => changeMonth(1)}>
           <Text className="text-indigo-600 text-base">Next →</Text>
@@ -161,11 +129,6 @@ const RenderExpenses = () => {
           Total: {currentCurrency.symbol}
           {totalExpenses.toFixed(2)}
         </Text>
-        <TouchableOpacity onPress={() => setCurrencyPickerVisible(true)}>
-          <Text className="text-indigo-600 text-base">
-            {currentCurrency.code} ▼
-          </Text>
-        </TouchableOpacity>
       </View>
 
       {currentCurrencyExpenses.length > 0 ? (
