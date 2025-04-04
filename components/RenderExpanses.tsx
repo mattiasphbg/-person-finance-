@@ -120,6 +120,14 @@ const RenderExpenses = () => {
         <TouchableOpacity onPress={() => changeMonth(-1)}>
           <Text className="text-indigo-600 text-base">← Prev</Text>
         </TouchableOpacity>
+        <TouchableOpacity>
+          <Text className="text-lg font-semibold text-indigo-600">
+            {currentDate.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            })}
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => changeMonth(1)}>
           <Text className="text-indigo-600 text-base">Next →</Text>
         </TouchableOpacity>
