@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Expense {
   id: string;
@@ -13,6 +14,8 @@ interface Currency {
   symbol: string;
 }
 
+type Currencies = Currency[];
+
 interface ExpenseStore {
   expenses: Expense[];
   currentCurrency: Currency;
@@ -25,26 +28,66 @@ interface ExpenseStore {
   fetchExpenses: () => Promise<void>;
 }
 
+const currencies: Currency[] = [
+  { code: "USD", symbol: "$" },
+  { code: "EUR", symbol: "€" },
+  { code: "GBP", symbol: "£" },
+  { code: "JPY", symbol: "¥" },
+];
+
 export const useExpenseStore = create<ExpenseStore>()((set) => ({
   expenses: [],
-  currentCurrency: { code: "USD", symbol: "$" },
+  currentCurrency: currencies[0],
   currentDate: new Date(),
   isLoading: false,
 
-  addExpense: (expense) => {
+  addExpense: async (expense) => {
     const newExpense = {
       ...expense,
       id: Date.now().toString(),
     };
-    set((state) => ({
-      expenses: [...state.expenses, newExpense],
-    }));
+
+    try {
+      // Get existing expenses from storage
+      const storedExpenses = await AsyncStorage.getItem("expenses");
+      const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
+
+      // Add new expense to the array
+      const updatedExpenses = [...parsedExpenses, newExpense];
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+
+      // Update state
+      set((state) => ({
+        expenses: [...state.expenses, newExpense],
+      }));
+    } catch (error) {
+      console.error("Error saving expense:", error);
+    }
   },
 
-  removeExpense: (id) => {
-    set((state) => ({
-      expenses: state.expenses.filter((expense) => expense.id !== id),
-    }));
+  removeExpense: async (id) => {
+    try {
+      // Get existing expenses from storage
+      const storedExpenses = await AsyncStorage.getItem("expenses");
+      const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
+
+      // Filter out the expense to remove
+      const updatedExpenses = parsedExpenses.filter(
+        (expense: Expense) => expense.id !== id
+      );
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+
+      // Update state
+      set((state) => ({
+        expenses: state.expenses.filter((expense) => expense.id !== id),
+      }));
+    } catch (error) {
+      console.error("Error removing expense:", error);
+    }
   },
 
   setCurrentCurrency: (currency) => {
@@ -58,25 +101,11 @@ export const useExpenseStore = create<ExpenseStore>()((set) => ({
   fetchExpenses: async () => {
     set({ isLoading: true });
     try {
-      // Simulate API call with setTimeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const mockData = [
-        {
-          id: "1",
-          description: "Groceries",
-          amount: 85.75,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-        {
-          id: "2",
-          description: "Dinner",
-          amount: 42.5,
-          date: new Date().toISOString(),
-          currency: "USD",
-        },
-      ];
-      set({ expenses: mockData });
+      // Get expenses from AsyncStorage
+      const storedExpenses = await AsyncStorage.getItem("expenses");
+      const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
+
+      set({ expenses: parsedExpenses });
     } catch (error) {
       console.error("Failed to fetch expenses:", error);
     } finally {

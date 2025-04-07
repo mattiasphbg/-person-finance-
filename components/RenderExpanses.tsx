@@ -38,6 +38,8 @@ const RenderExpenses = () => {
     setCurrentCurrency,
     isLoading,
     fetchExpenses,
+    addExpense,
+    setNewExpense,
   } = useExpenseStore();
 
   useEffect(() => {
@@ -107,9 +109,35 @@ const RenderExpenses = () => {
     );
   };
 
-  function setModalVisible(arg0: boolean): void {
-    throw new Error("Function not implemented.");
-  }
+  const addExpense = async () => {
+    if (
+      newExpense.description.trim() === "" ||
+      newExpense.amount.trim() === ""
+    ) {
+      return;
+    }
+
+    const amount = parseFloat(newExpense.amount);
+    if (isNaN(amount)) {
+      return;
+    }
+
+    const expenseItem = {
+      description: newExpense.description,
+      amount: amount,
+      date: currentDate.toISOString(),
+      currency: currentCurrency.code,
+    };
+
+    try {
+      await useExpenseStore.getState().addExpense(expenseItem);
+      setNewExpense({ description: "", amount: "" });
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error adding expense:", error);
+      // You might want to show an error message to the user here
+    }
+  };
 
   return (
     <View className="flex-1 p-5">
@@ -117,7 +145,7 @@ const RenderExpenses = () => {
         Monthly Expenses
       </Text>
       <View className="flex-row justify-between items-center mb-4">
-        <TouchableOpacity onPress={() => changeMonth(-1)}>
+        <TouchableOpacity onPress={() => changeMonth(-1)} activeOpacity={0.7}>
           <Text className="text-indigo-600 text-base">← Prev</Text>
         </TouchableOpacity>
         <TouchableOpacity>
@@ -128,7 +156,7 @@ const RenderExpenses = () => {
             })}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => changeMonth(1)}>
+        <TouchableOpacity onPress={() => changeMonth(1)} activeOpacity={0.7}>
           <Text className="text-indigo-600 text-base">Next →</Text>
         </TouchableOpacity>
       </View>
