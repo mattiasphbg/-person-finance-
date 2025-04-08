@@ -1,7 +1,9 @@
-import { View, TouchableOpacity, FlatList } from "react-native";
+import { View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { Text } from "./ui/text";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 import { useEffect } from "react";
+import React from "react";
+import { TextInput } from "react-native";
 
 interface Expense {
   id: string;
@@ -21,7 +23,7 @@ interface RenderExpensesProps {
   expenses: Expense[];
   currentDate: Date;
   currentCurrency: Currency;
-  setModalVisible: (visible: boolean) => void;
+  isModalVisible: (visible: boolean) => void;
   removeExpense: (id: string) => void;
   changeMonth: (delta: number) => void;
   openDatePicker: () => void;
@@ -37,9 +39,13 @@ const RenderExpenses = () => {
     setCurrentDate,
     setCurrentCurrency,
     isLoading,
+    isModalVisible,
+    showModal,
+    hideModal,
     fetchExpenses,
+    newExpenseForm,
+    updateNewExpenseForm,
     addExpense,
-    setNewExpense,
   } = useExpenseStore();
 
   useEffect(() => {
@@ -109,86 +115,107 @@ const RenderExpenses = () => {
     );
   };
 
-  const addExpense = async () => {
-    if (
-      newExpense.description.trim() === "" ||
-      newExpense.amount.trim() === ""
-    ) {
-      return;
-    }
-
-    const amount = parseFloat(newExpense.amount);
-    if (isNaN(amount)) {
-      return;
-    }
-
-    const expenseItem = {
-      description: newExpense.description,
-      amount: amount,
-      date: currentDate.toISOString(),
-      currency: currentCurrency.code,
-    };
-
-    try {
-      await useExpenseStore.getState().addExpense(expenseItem);
-      setNewExpense({ description: "", amount: "" });
-      setModalVisible(false);
-    } catch (error) {
-      console.error("Error adding expense:", error);
-      // You might want to show an error message to the user here
-    }
-  };
-
   return (
-    <View className="flex-1 p-5">
-      <Text className="text-2xl font-bold mb-4 text-center">
-        Monthly Expenses
-      </Text>
-      <View className="flex-row justify-between items-center mb-4">
-        <TouchableOpacity onPress={() => changeMonth(-1)} activeOpacity={0.7}>
-          <Text className="text-indigo-600 text-base">← Prev</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text className="text-lg font-semibold text-indigo-600">
-            {currentDate.toLocaleString("default", {
-              month: "long",
-              year: "numeric",
-            })}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => changeMonth(1)} activeOpacity={0.7}>
-          <Text className="text-indigo-600 text-base">Next →</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="flex-row justify-between items-center mb-5">
-        <Text className="text-lg font-bold text-gray-800">
-          Total: {currentCurrency.symbol}
-          {totalExpenses.toFixed(2)}
-        </Text>
-      </View>
+    <>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={hideModal}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white rounded-2xl p-5 w-4/5 shadow-lg">
+            <Text className="text-xl font-bold mb-5 text-center">
+              Add New Expense
+            </Text>
+            <TextInput
+              className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
+              placeholder="Description"
+              value={newExpenseForm.description}
+              onChangeText={(text) =>
+                updateNewExpenseForm({ description: text })
+              }
+            />
+            <TextInput
+              className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
+              placeholder="Amount"
+              keyboardType="numeric"
+              value={newExpenseForm.amount}
+              onChangeText={(text) => updateNewExpenseForm({ amount: text })}
+            />
+            <TouchableOpacity
+              className="bg-indigo-600 p-3 rounded-lg items-center mt-2"
+              onPress={() =>
+                addExpense({
+                  description: newExpenseForm.description,
+                  amount: Number(newExpenseForm.amount),
+                  date: new Date().toISOString(),
+                  currency: currentCurrency.code,
+                })
+              }
+            >
+              <Text className="text-white font-bold text-base">Add</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-red-500 p-3 rounded-lg items-center mt-2"
+              onPress={hideModal}
+            >
+              <Text className="text-white font-bold text-base">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
-      {currentCurrencyExpenses.length > 0 ? (
-        <FlatList
-          data={currentMonthExpenses}
-          renderItem={renderExpenseItem}
-          keyExtractor={(item) => item.id}
-          className="flex-1"
-        />
-      ) : (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-base text-gray-500">
-            No expenses in {currentCurrency.code} for this month
+      <View className="flex-1 p-5">
+        <Text className="text-2xl font-bold mb-4 text-center">
+          Monthly Expenses
+        </Text>
+        <View className="flex-row justify-between items-center mb-4">
+          <TouchableOpacity onPress={() => changeMonth(-1)} activeOpacity={0.7}>
+            <Text className="text-indigo-600 text-base">← Prev</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text className="text-lg font-semibold text-indigo-600">
+              {currentDate.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => changeMonth(1)} activeOpacity={0.7}>
+            <Text className="text-indigo-600 text-base">Next →</Text>
+          </TouchableOpacity>
+        </View>
+        <View className="flex-row justify-between items-center mb-5">
+          <Text className="text-lg font-bold text-gray-800">
+            Total: {currentCurrency.symbol}
+            {totalExpenses.toFixed(2)}
           </Text>
         </View>
-      )}
 
-      <TouchableOpacity
-        className="bg-indigo-600 p-4 rounded-xl items-center mt-4"
-        onPress={() => setModalVisible(true)}
-      >
-        <Text className="text-white font-bold text-base">Add Expense</Text>
-      </TouchableOpacity>
-    </View>
+        {currentCurrencyExpenses.length > 0 ? (
+          <FlatList
+            data={currentMonthExpenses}
+            renderItem={renderExpenseItem}
+            keyExtractor={(item) => item.id}
+            className="flex-1"
+          />
+        ) : (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-base text-gray-500">
+              No expenses in {currentCurrency.code} for this month
+            </Text>
+          </View>
+        )}
+
+        <TouchableOpacity
+          className="bg-indigo-600 p-4 rounded-xl items-center mt-4"
+          onPress={() => showModal()}
+        >
+          <Text className="text-white font-bold text-base">Add Expense</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
