@@ -13,23 +13,6 @@ interface Expense {
   currency: string;
 }
 
-// Define Currency type
-interface Currency {
-  code: string;
-  symbol: string;
-}
-
-interface RenderExpensesProps {
-  expenses: Expense[];
-  currentDate: Date;
-  currentCurrency: Currency;
-  isModalVisible: (visible: boolean) => void;
-  removeExpense: (id: string) => void;
-  changeMonth: (delta: number) => void;
-  openDatePicker: () => void;
-  setCurrencyPickerVisible: (visible: boolean) => void;
-}
-
 const RenderExpenses = () => {
   const {
     expenses,
