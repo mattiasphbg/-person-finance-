@@ -14,8 +14,6 @@ interface Currency {
   symbol: string;
 }
 
-type Currencies = Currency[];
-
 interface NewExpenseForm {
   description: string;
   amount: string;
@@ -77,17 +75,13 @@ export const useExpenseStore = create<ExpenseStore>()((set) => ({
     };
 
     try {
-      // Get existing expenses from storage
       const storedExpenses = await AsyncStorage.getItem("expenses");
       const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
 
-      // Add new expense to the array
       const updatedExpenses = [...parsedExpenses, newExpense];
 
-      // Save to AsyncStorage
       await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
 
-      // Update state
       set((state) => ({
         expenses: [...state.expenses, newExpense],
         isModalVisible: false,
@@ -100,19 +94,15 @@ export const useExpenseStore = create<ExpenseStore>()((set) => ({
 
   removeExpense: async (id) => {
     try {
-      // Get existing expenses from storage
       const storedExpenses = await AsyncStorage.getItem("expenses");
       const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
 
-      // Filter out the expense to remove
       const updatedExpenses = parsedExpenses.filter(
         (expense: Expense) => expense.id !== id
       );
 
-      // Save to AsyncStorage
       await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
 
-      // Update state
       set((state) => ({
         expenses: state.expenses.filter((expense) => expense.id !== id),
       }));
