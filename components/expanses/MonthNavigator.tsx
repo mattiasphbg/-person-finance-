@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+  StyleSheet,
+} from "react-native";
 import { Text } from "../ui/text";
-import { Calendar } from "react-native-calendars";
 
 interface MonthNavigatorProps {
   currentDate: Date;
@@ -20,10 +25,30 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
     setCurrentDate(newDate);
   };
 
-  const handleDateChange = (date: Date) => {
-    setCurrentDate(date);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const handleMonthSelect = (monthIndex: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(monthIndex);
+    setCurrentDate(newDate);
     setPickerVisible(false);
   };
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonthIndex = currentDate.getMonth();
 
   return (
     <View className="flex-row justify-between items-center mb-4">
@@ -42,24 +67,66 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
         <Text className="text-indigo-600 text-base">Next →</Text>
       </TouchableOpacity>
 
-      <Modal visible={isPickerVisible} transparent={true}>
-        <View className="flex-1 justify-center items-center">
-          <Calendar
-            current={currentDate.toISOString().split("T")[0]}
-            onDayPress={(day: { dateString: string }) =>
-              handleDateChange(new Date(day.dateString))
-            }
-            markedDates={{
-              [currentDate.toISOString().split("T")[0]]: {
-                selected: true,
-                marked: true,
-                selectedColor: "blue",
-              },
-            }}
-          />
-          <TouchableOpacity onPress={() => setPickerVisible(false)}>
-            <Text className="text-indigo-600 text-base">Cancel</Text>
-          </TouchableOpacity>
+      <Modal visible={isPickerVisible} transparent={true} animationType="fade">
+        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+          <View className="bg-white rounded-xl p-4 w-80 shadow-lg">
+            <View className="flex-row justify-between items-center mb-4">
+              <TouchableOpacity
+                onPress={() => {
+                  const newDate = new Date(currentDate);
+                  newDate.setFullYear(currentYear - 1);
+                  setCurrentDate(newDate);
+                }}
+              >
+                <Text className="text-indigo-600">← {currentYear - 1}</Text>
+              </TouchableOpacity>
+              <Text className="text-lg font-bold">{currentYear}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  const newDate = new Date(currentDate);
+                  newDate.setFullYear(currentYear + 1);
+                  setCurrentDate(newDate);
+                }}
+              >
+                <Text className="text-indigo-600">{currentYear + 1} →</Text>
+              </TouchableOpacity>
+            </View>
+
+            <FlatList
+              data={months}
+              numColumns={3}
+              keyExtractor={(item) => item}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  className={`flex-1 h-14 justify-center items-center m-1 rounded-md ${
+                    index === currentMonthIndex
+                      ? "bg-indigo-600"
+                      : "bg-gray-100"
+                  }`}
+                  onPress={() => handleMonthSelect(index)}
+                >
+                  <Text
+                    className={`text-base ${
+                      index === currentMonthIndex
+                        ? "text-white font-bold"
+                        : "text-gray-800"
+                    }`}
+                  >
+                    {item.substring(0, 3)}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            <View className="flex-row justify-end mt-4">
+              <TouchableOpacity
+                className="px-4 py-2"
+                onPress={() => setPickerVisible(false)}
+              >
+                <Text className="text-indigo-600 font-medium">Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
     </View>
