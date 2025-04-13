@@ -13,10 +13,7 @@ interface MonthNavigatorProps {
   setCurrentDate: (date: Date) => void;
 }
 
-const MonthNavigator: React.FC<MonthNavigatorProps> = ({
-  currentDate,
-  setCurrentDate,
-}) => {
+function MonthNavigator({ currentDate, setCurrentDate }: MonthNavigatorProps) {
   const [isPickerVisible, setPickerVisible] = useState(false);
 
   const changeMonth = (delta: number) => {
@@ -131,6 +128,6 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
       </Modal>
     </View>
   );
-};
+}
 
 export default MonthNavigator;
