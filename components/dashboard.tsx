@@ -9,10 +9,13 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
+import { useExpenseStore } from "@/stores/useExpenseStore";
 
-const renderDashboard = () => {
+const Dashboard = () => {
+  const { expenses, currentDate, currentCurrency } = useExpenseStore();
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
+
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
@@ -186,4 +189,4 @@ const renderDashboard = () => {
   );
 };
 
-export default renderDashboard;
+export default Dashboard;
