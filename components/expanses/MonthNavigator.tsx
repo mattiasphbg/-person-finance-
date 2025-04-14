@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import { View, TouchableOpacity, Modal, FlatList } from "react-native";
 import { Text } from "../ui/text";
 
 interface MonthNavigatorProps {
@@ -65,7 +59,7 @@ function MonthNavigator({ currentDate, setCurrentDate }: MonthNavigatorProps) {
       </TouchableOpacity>
 
       <Modal visible={isPickerVisible} transparent={true} animationType="fade">
-        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+        <View className="flex-1 justify-center items-center bg-black/50  ">
           <View className="bg-white rounded-xl p-4 w-80 shadow-lg">
             <View className="flex-row justify-between items-center mb-4">
               <TouchableOpacity
