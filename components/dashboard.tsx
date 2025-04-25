@@ -7,12 +7,21 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 
 const Dashboard = () => {
-  const { expenses, currentDate, currentCurrency } = useExpenseStore();
+  const { expenses, currentDate, currentCurrency } = useExpenseStore(
+    (state) => ({
+      expenses: state.expenses,
+      currentDate: state.currentDate,
+      currentCurrency: state.currentCurrency,
+    })
+  );
+
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
 
@@ -51,7 +60,7 @@ const Dashboard = () => {
           <Text className="text-2xl font-semibold text-gray-800">$</Text>
           <Text className="text-sm text-gray-600 mt-1">Current net worth</Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
-            ${netWorth.toLocaleString()}
+            ${expenses.reduce((acc, curr) => acc + curr.amount, 0)}
           </Text>
         </View>
         <TouchableOpacity className="flex-row items-center bg-indigo-100 px-3 py-1.5 rounded-full">
