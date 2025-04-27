@@ -14,17 +14,11 @@ import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 
 const Dashboard = () => {
-  const { expenses, currentDate, currentCurrency } = useExpenseStore(
-    (state) => ({
-      expenses: state.expenses,
-      currentDate: state.currentDate,
-      currentCurrency: state.currentCurrency,
-    })
-  );
+  const { expenses, currentDate, currentCurrency } = useExpenseStore();
 
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
-
+  console.log("expenses:", expenses);
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
