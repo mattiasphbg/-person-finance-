@@ -14,7 +14,7 @@ import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 
 const Dashboard = () => {
-  const { expenses, currentDate, currentCurrency } = useExpenseStore();
+  const { expenses } = useExpenseStore();
 
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
