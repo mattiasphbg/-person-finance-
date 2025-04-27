@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const screenWidth = Dimensions.get("window").width;
   const [netWorth, setNetWorth] = useState(5000);
-  console.log("expenses:", expenses);
+
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
