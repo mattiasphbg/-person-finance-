@@ -25,10 +25,6 @@ const RenderExpenses = () => {
     addExpense,
   } = useExpenseStore();
 
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
-
   const currentMonthExpenses = expenses.filter((expense) => {
     const expenseDate = new Date(expense.date);
     return (
