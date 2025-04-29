@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef } from "react";
 import { View, Modal, TouchableOpacity, TextInput } from "react-native";
 import { Text } from "../ui/text";
 
@@ -27,6 +28,12 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   addExpense,
   currentCurrency,
 }) => {
+  const formRowDescription = useRef<TextInput>(null);
+  const formRowAmount = useRef<TextInput>(null);
+
+  let descriptionValue = "";
+  let amountValue = "";
+
   return (
     <Modal
       animationType="slide"
@@ -40,24 +47,28 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             Add New Expense
           </Text>
           <TextInput
+            ref={formRowDescription}
             className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
             placeholder="Description"
-            value={newExpenseForm.description}
-            onChangeText={(text) => updateNewExpenseForm({ description: text })}
+            onChangeText={(text) => {
+              descriptionValue = text;
+            }}
           />
           <TextInput
+            ref={formRowAmount}
             className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
             placeholder="Amount"
             keyboardType="numeric"
-            value={newExpenseForm.amount}
-            onChangeText={(text) => updateNewExpenseForm({ amount: text })}
+            onChangeText={(text) => {
+              amountValue = text;
+            }}
           />
           <TouchableOpacity
             className="bg-indigo-600 p-3 rounded-lg items-center mt-2"
             onPress={() =>
               addExpense({
-                description: newExpenseForm.description,
-                amount: Number(newExpenseForm.amount),
+                description: descriptionValue,
+                amount: Number(amountValue),
                 date: new Date().toISOString(),
                 currency: currentCurrency.code,
               })
