@@ -1,11 +1,11 @@
-import { View } from "react-native";
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import { Image } from "@/components/ui/image";
-import { Button } from "@/components/ui/button";
-import { router } from "expo-router";
 import Dashboard from "@/components/dashboard";
+import { SafeAreaView, StatusBar } from "react-native";
 
 export default function HomeScreen() {
-  return Dashboard();
+  return (
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <StatusBar barStyle="dark-content" />
+      <Dashboard />
+    </SafeAreaView>
+  );
 }

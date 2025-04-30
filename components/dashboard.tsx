@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
   TouchableOpacity,
   View,
@@ -17,7 +17,6 @@ const Dashboard = () => {
   const { expenses } = useExpenseStore();
 
   const screenWidth = Dimensions.get("window").width;
-  const [netWorth, setNetWorth] = useState(5000);
 
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
@@ -39,7 +38,7 @@ const Dashboard = () => {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        data: [3200, 3700, 4200, 3800, 4500, 5000],
+        data: expenses.map((expense) => expense.amount),
         color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
         strokeWidth: 2,
       },
@@ -48,7 +47,6 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* Header Section */}
       <View className="flex-row justify-between items-start px-5 pt-5 pb-3">
         <View>
           <Text className="text-2xl font-semibold text-gray-800">$</Text>
@@ -96,7 +94,7 @@ const Dashboard = () => {
           <View className="flex-row justify-between mb-4">
             <Text className="text-lg font-semibold text-gray-800">Cash</Text>
             <Text className="text-lg font-semibold text-gray-800">
-              $4,100.00
+              ${expenses.reduce((acc, curr) => acc + curr.amount, 0)}
             </Text>
           </View>
 
@@ -175,16 +173,6 @@ const Dashboard = () => {
                 5 minutes ago
               </Text>
             </View>
-          </View>
-        </View>
-
-        {/* Liabilities Section */}
-        <View className="bg-white mx-5 rounded-xl p-4 mb-4 shadow">
-          <View className="flex-row justify-between">
-            <Text className="text-lg font-semibold text-gray-800">
-              Liabilities
-            </Text>
-            <Text className="text-lg font-semibold text-gray-800">$0</Text>
           </View>
         </View>
       </ScrollView>
