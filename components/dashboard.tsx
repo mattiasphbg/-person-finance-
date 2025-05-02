@@ -7,14 +7,26 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
-import { useExpenseStore } from "@/stores/useExpenseStore";
 
+import { useExpenseStore } from "@/stores/useExpenseStore";
+import MonthNavigator from "./expanses/MonthNavigator";
 const Dashboard = () => {
-  const { expenses } = useExpenseStore();
+  const { expenses, currentDate, currentCurrency } = useExpenseStore();
+
+  const currentMonthExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+    return (
+      expenseDate.getMonth() === currentDate.getMonth() &&
+      expenseDate.getFullYear() === currentDate.getFullYear()
+    );
+  });
+
+  const currentCurrencyExpenses = currentMonthExpenses.filter(
+    (expense) => expense.currency === currentCurrency.code
+  );
 
   const screenWidth = Dimensions.get("window").width;
 
@@ -69,10 +81,10 @@ const Dashboard = () => {
           height={180}
           chartConfig={chartConfig}
           bezier
-          withDots={false}
+          withDots={true}
           withInnerLines={false}
           withOuterLines={false}
-          withVerticalLabels={false}
+          withVerticalLabels={true}
           withHorizontalLabels={false}
           style={{
             borderRadius: 16,
@@ -84,7 +96,9 @@ const Dashboard = () => {
         </View>
         <View className="flex-row justify-between px-2 mt-2">
           <Text className="text-xs text-gray-500">Today</Text>
-          <Text className="text-xs text-gray-500">Aug 12</Text>
+          <Text className="text-xs text-gray-500">
+            {currentCurrencyExpenses.map((expense) => expense.date)}
+          </Text>
         </View>
       </View>
 
