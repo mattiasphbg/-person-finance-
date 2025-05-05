@@ -12,7 +12,7 @@ import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 
 import { useExpenseStore } from "@/stores/useExpenseStore";
-import MonthNavigator from "./expanses/MonthNavigator";
+
 const Dashboard = () => {
   const { expenses, currentDate, currentCurrency } = useExpenseStore();
 
@@ -112,82 +112,38 @@ const Dashboard = () => {
             </Text>
           </View>
 
-          {/* Individual Cash Account */}
-          <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-            <View className="flex-row items-center">
-              <View className="w-9 h-9 rounded-full bg-indigo-600 justify-center items-center mr-3">
-                <MaterialCommunityIcons
-                  name="wallet-outline"
-                  size={18}
-                  color="#fff"
-                />
+          {currentCurrencyExpenses.map((expense, index) => (
+            <View
+              key={expense.id}
+              className={`flex-row justify-between items-center py-3 ${
+                index < currentCurrencyExpenses.length - 1
+                  ? "border-b border-gray-100"
+                  : ""
+              }`}
+            >
+              <View className="flex-row items-center">
+                <View
+                  className={`w-9 h-9 rounded-full bg-${"orange-500"} justify-center items-center mr-3`}
+                ></View>
+                <View>
+                  <Text className="text-base font-medium text-gray-800">
+                    {expense.description}
+                  </Text>
+                  <Text className="text-sm text-gray-500 mt-0.5">
+                    {new Date(expense.date).toLocaleDateString()}
+                  </Text>
+                </View>
               </View>
-              <View>
+              <View className="items-end">
                 <Text className="text-base font-medium text-gray-800">
-                  Individual Cash Account
+                  {`${expense.currency} ${expense.amount.toFixed(2)}`}
                 </Text>
                 <Text className="text-sm text-gray-500 mt-0.5">
-                  Updated • 6/25/23
+                  {expense.date}
                 </Text>
               </View>
             </View>
-            <View className="items-end">
-              <Text className="text-base font-medium text-gray-800">
-                $100.00
-              </Text>
-              <Text className="text-sm text-yellow-500 mt-0.5">Pending</Text>
-            </View>
-          </View>
-
-          {/* Checking Account */}
-          <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-            <View className="flex-row items-center">
-              <View className="w-9 h-9 rounded-full bg-red-500 justify-center items-center mr-3">
-                <FontAwesome5 name="university" size={16} color="#fff" />
-              </View>
-              <View>
-                <Text className="text-base font-medium text-gray-800">
-                  Checking
-                </Text>
-                <Text className="text-sm text-gray-500 mt-0.5">
-                  Bank of America
-                </Text>
-              </View>
-            </View>
-            <View className="items-end">
-              <Text className="text-base font-medium text-gray-800">
-                $2,500.00
-              </Text>
-              <Text className="text-sm text-gray-500 mt-0.5">
-                5 minutes ago
-              </Text>
-            </View>
-          </View>
-
-          {/* Savings Account */}
-          <View className="flex-row justify-between items-center py-3">
-            <View className="flex-row items-center">
-              <View className="w-9 h-9 rounded-full bg-red-500 justify-center items-center mr-3">
-                <FontAwesome5 name="piggy-bank" size={16} color="#fff" />
-              </View>
-              <View>
-                <Text className="text-base font-medium text-gray-800">
-                  Savings
-                </Text>
-                <Text className="text-sm text-gray-500 mt-0.5">
-                  Bank of America
-                </Text>
-              </View>
-            </View>
-            <View className="items-end">
-              <Text className="text-base font-medium text-gray-800">
-                $1,500.00
-              </Text>
-              <Text className="text-sm text-gray-500 mt-0.5">
-                5 minutes ago
-              </Text>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
     </>
