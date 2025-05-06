@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { LineChart } from "react-native-chart-kit";
-import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 
 import { useExpenseStore } from "@/stores/useExpenseStore";
 
@@ -50,7 +49,7 @@ const Dashboard = () => {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        data: expenses.map((expense) => expense.amount),
+        data: currentCurrencyExpenses.map((expense) => expense.amount),
         color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
         strokeWidth: 2,
       },
