@@ -63,7 +63,11 @@ const Dashboard = () => {
           <Text className="text-2xl font-semibold text-gray-800">$</Text>
           <Text className="text-sm text-gray-600 mt-1">Current net worth</Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
-            ${expenses.reduce((acc, curr) => acc + curr.amount, 0)}
+            $
+            {currentCurrencyExpenses.reduce(
+              (acc, curr) => acc + curr.amount,
+              0
+            )}
           </Text>
         </View>
         <TouchableOpacity className="flex-row items-center bg-indigo-100 px-3 py-1.5 rounded-full">
