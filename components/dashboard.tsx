@@ -49,7 +49,7 @@ const Dashboard = () => {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        data: currentCurrencyExpenses.map((expense) => expense.amount),
+        data: expenses.map((expense) => expense.amount),
         color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
         strokeWidth: 2,
       },
@@ -78,7 +78,7 @@ const Dashboard = () => {
 
       {/* Chart Section */}
       <View className="bg-white mx-5 rounded-xl p-2.5 mt-2 shadow">
-        {/* <LineChart
+        <LineChart
           data={data}
           width={screenWidth - 40}
           height={180}
@@ -93,7 +93,7 @@ const Dashboard = () => {
             borderRadius: 16,
             paddingRight: 0,
           }}
-        /> */}
+        />
         <View className="absolute top-1/2 right-1/5 w-6 h-6 rounded-full bg-white justify-center items-center shadow-md shadow-indigo-500">
           <View className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
         </View>
