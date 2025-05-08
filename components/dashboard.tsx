@@ -29,6 +29,50 @@ const Dashboard = () => {
 
   const screenWidth = Dimensions.get("window").width;
 
+  // Get current year
+  const currentYear = currentDate.getFullYear();
+
+  // Initialize array for 12 months
+  const monthlyTotals = Array(12).fill(0);
+
+  // Sum expenses for each month of the current year and current currency
+  expenses.forEach((expense) => {
+    const expenseDate = new Date(expense.date);
+    if (
+      expenseDate.getFullYear() === currentYear &&
+      expense.currency === currentCurrency.code
+    ) {
+      monthlyTotals[expenseDate.getMonth()] += expense.amount;
+    }
+  });
+
+  const monthIndex = currentDate.getMonth() + 1;
+  const data = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ].slice(0, monthIndex),
+    datasets: [
+      {
+        data: monthlyTotals.slice(0, monthIndex),
+        color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
+        strokeWidth: 2,
+      },
+    ],
+    yAxisLabel: "$",
+    yAxisSuffix: " ",
+  };
+
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
@@ -43,17 +87,6 @@ const Dashboard = () => {
       strokeWidth: "2",
       stroke: "#4834d4",
     },
-  };
-
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        data: expenses.map((expense) => expense.amount),
-        color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
-        strokeWidth: 2,
-      },
-    ],
   };
 
   return (
