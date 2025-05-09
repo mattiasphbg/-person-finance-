@@ -88,13 +88,20 @@ const Dashboard = () => {
       stroke: "#4834d4",
     },
   };
+  function getMonthName(monthNumber: number): string {
+    // monthNumber is 0-based (0 = January, 11 = December)
+    const date = new Date(2025, monthNumber, 1);
+    return date.toLocaleString("en-US", { month: "long" });
+  }
 
   return (
     <>
       <View className="flex-row justify-between items-start px-5 pt-5 pb-3">
         <View>
-          <Text className="text-2xl font-semibold text-gray-800">$</Text>
-          <Text className="text-sm text-gray-600 mt-1">Current net worth</Text>
+          <Text className="text-2xl font-semibold text-gray-800"></Text>
+          <Text className="text-sm text-gray-600 mt-1">
+            {getMonthName(monthIndex - 1)}
+          </Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
             $
             {currentCurrencyExpenses.reduce(
