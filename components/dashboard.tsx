@@ -66,17 +66,17 @@ const Dashboard = () => {
       {
         data: monthlyTotals.slice(0, monthIndex),
         color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
-        strokeWidth: 2,
+        strokeWidth: 1,
       },
     ],
     yAxisLabel: "$",
-    yAxisSuffix: " ",
+    yAxisSuffix: "k",
   };
 
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
-    decimalPlaces: 0,
+    decimalPlaces: 1,
     color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     style: {
@@ -124,21 +124,17 @@ const Dashboard = () => {
           height={180}
           chartConfig={chartConfig}
           bezier
-          withDots={true}
+          withDots={false}
           withInnerLines={false}
           withOuterLines={false}
           withVerticalLabels={true}
           withHorizontalLabels={false}
           style={{
             borderRadius: 16,
-            paddingRight: 0,
           }}
         />
-        <View className="absolute top-1/2 right-1/5 w-6 h-6 rounded-full bg-white justify-center items-center shadow-md shadow-indigo-500">
-          <View className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
-        </View>
         <View className="flex-row justify-between px-2 mt-2">
-          <Text className="text-xs text-gray-500">Today</Text>
+          <Text className="text-xs text-gray-500">Today </Text>
           <Text className="text-xs text-gray-500">
             {currentCurrencyExpenses.map((expense) => expense.date)}
           </Text>
