@@ -124,21 +124,15 @@ const Dashboard = () => {
           height={180}
           chartConfig={chartConfig}
           bezier
-          withDots={false}
+          withDots={true}
           withInnerLines={false}
           withOuterLines={false}
           withVerticalLabels={true}
-          withHorizontalLabels={false}
+          withHorizontalLabels={true}
           style={{
             borderRadius: 16,
           }}
         />
-        <View className="flex-row justify-between px-2 mt-2">
-          <Text className="text-xs text-gray-500">Today </Text>
-          <Text className="text-xs text-gray-500">
-            {currentCurrencyExpenses.map((expense) => expense.date)}
-          </Text>
-        </View>
       </View>
 
       <ScrollView className="flex-1 mt-5">
