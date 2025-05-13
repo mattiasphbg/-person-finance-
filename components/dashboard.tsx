@@ -79,9 +79,6 @@ const Dashboard = () => {
     decimalPlaces: 1,
     color: (opacity = 1) => `rgba(72, 52, 212, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
     propsForDots: {
       r: "6",
       strokeWidth: "2",
@@ -129,6 +126,7 @@ const Dashboard = () => {
           withOuterLines={false}
           withVerticalLabels={true}
           withHorizontalLabels={true}
+          formatYLabel={(yValue) => `$ ${yValue}`}
           style={{
             borderRadius: 16,
           }}
