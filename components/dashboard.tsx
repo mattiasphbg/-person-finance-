@@ -97,7 +97,7 @@ const Dashboard = () => {
         <View>
           <Text className="text-2xl font-semibold text-gray-800"></Text>
           <Text className="text-sm text-gray-600 mt-1">
-            {getMonthName(monthIndex - 1)}
+            {getMonthName(monthIndex - 1)} Total Spent
           </Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
             $
@@ -137,9 +137,15 @@ const Dashboard = () => {
         {/* Cash Section */}
         <View className="bg-white mx-5 rounded-xl p-4 mb-4 shadow">
           <View className="flex-row justify-between mb-4">
-            <Text className="text-lg font-semibold text-gray-800">Cash</Text>
             <Text className="text-lg font-semibold text-gray-800">
-              ${expenses.reduce((acc, curr) => acc + curr.amount, 0)}
+              {getMonthName(monthIndex - 1)}
+            </Text>
+            <Text className="text-lg font-semibold text-gray-800">
+              $
+              {currentCurrencyExpenses.reduce(
+                (acc, curr) => acc + curr.amount,
+                0
+              )}
             </Text>
           </View>
 
