@@ -96,8 +96,8 @@ const Dashboard = () => {
       <View className="flex-row justify-between items-start px-5 pt-5 pb-3">
         <View>
           <Text className="text-2xl font-semibold text-gray-800"></Text>
-          <Text className="text-sm text-gray-600 mt-1">
-            {getMonthName(monthIndex - 1)} Total Spent
+          <Text className="text-lg font-semibold text-gray-800">
+            {getMonthName(monthIndex - 1)} {currentYear}
           </Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
             $
@@ -165,7 +165,10 @@ const Dashboard = () => {
                     {expense.description}
                   </Text>
                   <Text className="text-sm text-gray-500 mt-0.5">
-                    {new Date(expense.date).toLocaleDateString()}
+                    {new Date(expense.date).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                    })}
                   </Text>
                 </View>
               </View>
