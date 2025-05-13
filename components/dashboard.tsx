@@ -113,7 +113,6 @@ const Dashboard = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Chart Section */}
       <View className="bg-white mx-5 rounded-xl p-2.5 mt-2 shadow">
         <LineChart
           data={data}
@@ -134,7 +133,6 @@ const Dashboard = () => {
       </View>
 
       <ScrollView className="flex-1 mt-5">
-        {/* Cash Section */}
         <View className="bg-white mx-5 rounded-xl p-4 mb-4 shadow">
           <View className="flex-row justify-between mb-4">
             <Text className="text-lg font-semibold text-gray-800">
@@ -174,9 +172,6 @@ const Dashboard = () => {
               <View className="items-end">
                 <Text className="text-base font-medium text-gray-800">
                   {`${expense.currency} ${expense.amount.toFixed(2)}`}
-                </Text>
-                <Text className="text-sm text-gray-500 mt-0.5">
-                  {expense.date}
                 </Text>
               </View>
             </View>
