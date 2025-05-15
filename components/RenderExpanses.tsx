@@ -1,4 +1,11 @@
-import { View, TouchableOpacity, FlatList, Modal, Alert } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+  Alert,
+  Button,
+} from "react-native";
 import { Text } from "./ui/text";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 import { useEffect } from "react";
@@ -7,7 +14,8 @@ import ExpenseList from "./expanses/ExpenseList";
 import MonthNavigator from "./expanses/MonthNavigator";
 import AddExpenseModal from "./expanses/AddExpenseModal";
 import ExpenseSummary from "./expanses/ExpenseSummary";
-import { exportAppData, importAppData } from "@/lib/storage";
+
+import ImportExport from "./expanses/importExport";
 
 const RenderExpenses = () => {
   const {
@@ -85,35 +93,8 @@ const RenderExpenses = () => {
         >
           <Text className="text-white font-bold text-base">Add Expense</Text>
         </TouchableOpacity>
-        {/* Export/Import Buttons */}
-        <TouchableOpacity
-          className="bg-green-600 p-4 rounded-xl items-center mt-4"
-          onPress={async () => {
-            const result = await exportAppData();
-            if (result.success) {
-              Alert.alert("Export Success", `File saved to: ${result.uri}`);
-            } else {
-              Alert.alert("Export Failed", result.error || "Unknown error");
-            }
-          }}
-        >
-          <Text className="text-white font-bold text-base">Export Data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="bg-blue-600 p-4 rounded-xl items-center mt-4"
-          onPress={async () => {
-            const result = await importAppData();
-            if (result.success) {
-              Alert.alert("Import Success", "Data imported successfully!");
-              fetchExpenses();
-            } else {
-              Alert.alert("Import Failed", result.error || "Unknown error");
-            }
-          }}
-        >
-          <Text className="text-white font-bold text-base">Import Data</Text>
-        </TouchableOpacity>
       </View>
+      <ImportExport />
     </>
   );
 };
