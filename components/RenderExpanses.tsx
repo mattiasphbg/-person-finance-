@@ -28,7 +28,6 @@ const RenderExpenses = () => {
     isModalVisible,
     showModal,
     hideModal,
-    fetchExpenses,
     newExpenseForm,
     updateNewExpenseForm,
     addExpense,
@@ -93,8 +92,10 @@ const RenderExpenses = () => {
         >
           <Text className="text-white font-bold text-base">Add Expense</Text>
         </TouchableOpacity>
+        <TouchableOpacity className="bg-green-600 p-4 rounded-xl items-center mt-4">
+          <ImportExport />
+        </TouchableOpacity>
       </View>
-      <ImportExport />
     </>
   );
 };

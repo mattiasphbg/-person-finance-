@@ -17,11 +17,13 @@ export default function ImportExport() {
         placement="bottom left"
         trigger={(triggerProps) => (
           <Pressable {...triggerProps}>
-            <Text>Menu</Text>
+            <Text className="text-white font-bold text-base">
+              Import/Export save
+            </Text>
           </Pressable>
         )}
       >
-        <MenuItem key="impoert">
+        <MenuItem key="import">
           <TouchableOpacity
             className="bg-green-600 p-4 rounded-xl items-center mt-4"
             onPress={async () => {
