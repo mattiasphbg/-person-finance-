@@ -48,6 +48,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </Text>
           <TextInput
             ref={formRowDescription}
+            maxLength={64}
             className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
             placeholder="Description"
             onChangeText={(text) => {
@@ -58,6 +59,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             ref={formRowAmount}
             className="h-12 border border-gray-300 rounded-lg mb-3 px-4 text-base"
             placeholder="Amount"
+            maxLength={32}
             keyboardType="numeric"
             onChangeText={(text) => {
               amountValue = text;
