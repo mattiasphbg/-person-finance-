@@ -70,7 +70,7 @@ const RenderExpenses = () => {
       />
 
       <View className="flex-1 p-5">
-        <Text className="text-2xl font-bold mb-4 text-center">
+        <Text className="text-2xl mt-2 font-bold mb-4 text-center">
           Monthly Expenses
         </Text>
         <MonthNavigator
