@@ -17,7 +17,7 @@ export default function ImportExport() {
         placement="bottom left"
         trigger={(triggerProps) => (
           <Pressable {...triggerProps}>
-            <Text className="text-white font-bold text-base">
+            <Text className="text-white bg-green-600 p-4 rounded-xl items-center mt-4 text-center font-bold">
               Import/Export save
             </Text>
           </Pressable>
