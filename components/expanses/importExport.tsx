@@ -23,7 +23,7 @@ export default function ImportExport() {
           </Pressable>
         )}
       >
-        <MenuItem key="import">
+        <MenuItem key="Export" textValue="Export Data">
           <TouchableOpacity
             className="bg-green-600 p-4 rounded-xl items-center mt-4"
             onPress={async () => {
@@ -38,7 +38,7 @@ export default function ImportExport() {
             <Text className="text-white font-bold text-base">Export Data</Text>
           </TouchableOpacity>
         </MenuItem>
-        <MenuItem>
+        <MenuItem key="import" textValue="Import Data">
           <TouchableOpacity
             className="bg-blue-600 p-4 rounded-xl items-center mt-4"
             onPress={async () => {
