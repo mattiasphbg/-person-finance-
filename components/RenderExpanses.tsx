@@ -5,10 +5,10 @@ import {
   Modal,
   Alert,
   Button,
+  SafeAreaView,
 } from "react-native";
 import { Text } from "./ui/text";
 import { useExpenseStore } from "@/stores/useExpenseStore";
-import { useEffect } from "react";
 import React from "react";
 import ExpenseList from "./expanses/ExpenseList";
 import MonthNavigator from "./expanses/MonthNavigator";
