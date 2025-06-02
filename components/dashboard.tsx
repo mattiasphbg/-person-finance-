@@ -107,10 +107,6 @@ const Dashboard = () => {
             )}
           </Text>
         </View>
-        <TouchableOpacity className="flex-row items-center bg-indigo-100 px-3 py-1.5 rounded-full">
-          <Ionicons name="flag-outline" size={16} color="#4834d4" />
-          <Text className="text-indigo-600 font-medium ml-1">Goals</Text>
-        </TouchableOpacity>
       </View>
 
       <View className="bg-white mx-5 rounded-xl p-2.5 mt-2 shadow">
