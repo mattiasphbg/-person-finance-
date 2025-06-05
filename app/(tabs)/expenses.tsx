@@ -1,7 +1,7 @@
 import { SafeAreaView, StatusBar } from "react-native";
 import RenderExpenses from "@/components/RenderExpanses";
 
-// TODO: create widgets for adding expenses
+// TODO: create widgets for adding expenses: we gonna use react-native-android-widget to start with which we can use to create a widget for adding expenses but have to create it by link to the main app just like to-do list does
 
 const ExpensePage = () => {
   return (
