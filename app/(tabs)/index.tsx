@@ -1,10 +1,8 @@
 import Dashboard from "@/components/dashboard";
 import { SafeAreaView, StatusBar } from "react-native";
 
-// create preview for the widget in the home screen
-import { View, Text } from "react-native";
 import { WidgetPreview } from "react-native-android-widget";
-import ExpenseWidget from "@/widgets/ExpanseWidget";
+import ExpenseWidget from "@/app/widgets/ExpanseWidget";
 
 export default function HomeScreen() {
   return (
