@@ -36,7 +36,26 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "react-native-android-widget",
+        {
+          "fonts": ["./assets/fonts/Inter.ttf"],
+          "widgets": [
+            {
+              "name": "ExpenseWidget",
+              "label": "My Expense Widget",
+              "minWidth": "320dp",
+              "minHeight": "120dp",
+              "targetCellWidth": 5,
+              "targetCellHeight": 2,
+              "description": "This is my expense widget",
+              "previewImage": "./assets/widget-preview/expense.png",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
