@@ -50,7 +50,7 @@
               "targetCellWidth": 5,
               "targetCellHeight": 2,
               "description": "This is my expense widget",
-              "previewImage": "./assets/widget-preview/expense.png",
+              "previewImage": "./assets/widget-preview/widget-preview/hello.png",
               "updatePeriodMillis": 1800000
             }
           ]
