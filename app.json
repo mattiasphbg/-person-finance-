@@ -40,7 +40,9 @@
       [
         "react-native-android-widget",
         {
-          "fonts": ["./assets/fonts/Inter.ttf"],
+          "fonts": [
+            "./assets/fonts/Inter.ttf"
+          ],
           "widgets": [
             {
               "name": "ExpenseWidget",
@@ -65,6 +67,12 @@
       "eas": {
         "projectId": "972cd1b5-43e4-42d3-8a13-9d841cbda075"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/972cd1b5-43e4-42d3-8a13-9d841cbda075"
     }
   }
 }
