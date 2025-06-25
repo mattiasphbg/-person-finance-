@@ -7,6 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -33,18 +34,54 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      "expo-font",
+      "expo-web-browser",
+      [
+        "react-native-android-widget",
+        {
+          "fonts": [
+            "./assets/fonts/Inter.ttf"
+          ],
+          "widgets": [
+            {
+              "name": "ExpenseWidget",
+              "label": "My Expense Widget",
+              "minWidth": "320dp",
+              "minHeight": "120dp",
+              "targetCellWidth": 5,
+              "targetCellHeight": 2,
+              "description": "This is my expense widget",
+              "previewImage": "./assets/widget-preview/widget-preview/hello.png",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
+<<<<<<< HEAD
       "router": {
         "origin": false
       },
       "eas": {
         "projectId": "972cd1b5-43e4-42d3-8a13-9d841cbda075"
       }
+=======
+      "router": {},
+      "eas": {
+        "projectId": "972cd1b5-43e4-42d3-8a13-9d841cbda075"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/972cd1b5-43e4-42d3-8a13-9d841cbda075"
+>>>>>>> 6869c9aa3600f9ce427c74b538e9e00e2490e75d
     }
   }
 }

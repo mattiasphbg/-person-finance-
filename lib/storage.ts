@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
+import * as DocumentPicker from "expo-document-picker";
 
 const STORAGE_KEYS = {
   EXPENSES: "@PersonalFinance:expenses",
@@ -115,3 +117,60 @@ export function generateSampleExpenses(currency: string = "USD"): Expense[] {
     currency: currency,
   }));
 }
+
+export interface ExportedAppData {
+  expenses: Expense[];
+  selectedCurrency: string | null;
+}
+
+export const exportAppData = async (): Promise<{
+  success: boolean;
+  uri?: string;
+  error?: string;
+}> => {
+  try {
+    const [expenses, selectedCurrency] = await Promise.all([
+      getExpenses(),
+      getSelectedCurrency(),
+    ]);
+    const data: ExportedAppData = { expenses, selectedCurrency };
+    const json = JSON.stringify(data, null, 2);
+    const fileUri = `${FileSystem.documentDirectory}personal-finance-backup.json`;
+    await FileSystem.writeAsStringAsync(fileUri, json, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    return { success: true, uri: fileUri };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const importAppData = async (): Promise<{
+  success: boolean;
+  error?: string;
+}> => {
+  try {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "application/json",
+      copyToCacheDirectory: true,
+      multiple: false,
+    });
+    if (result.canceled || !result.assets || result.assets.length === 0) {
+      return { success: false, error: "No file selected." };
+    }
+    const fileUri = result.assets[0].uri;
+    const json = await FileSystem.readAsStringAsync(fileUri, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    const data: ExportedAppData = JSON.parse(json);
+    if (data.expenses) {
+      await saveExpenses(data.expenses);
+    }
+    if (data.selectedCurrency) {
+      await saveSelectedCurrency(data.selectedCurrency);
+    }
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};

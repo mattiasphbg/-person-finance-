@@ -26,6 +26,7 @@ interface ExpenseStore {
   isLoading: boolean;
   isModalVisible: boolean;
   newExpenseForm: NewExpenseForm;
+  init: () => Promise<void>;
   addExpense: (expense: Omit<Expense, "id">) => void;
   removeExpense: (id: string) => void;
   setCurrentCurrency: (currency: Currency) => void;
@@ -50,7 +51,7 @@ const initialNewExpenseForm: NewExpenseForm = {
   amount: "",
 };
 
-export const useExpenseStore = create<ExpenseStore>()((set) => ({
+export const useExpenseStore = create<ExpenseStore>()((set, get) => ({
   expenses: [],
   currentCurrency: currencies[0],
   currentDate: new Date(),
@@ -122,7 +123,6 @@ export const useExpenseStore = create<ExpenseStore>()((set) => ({
   fetchExpenses: async () => {
     set({ isLoading: true });
     try {
-      // Get expenses from AsyncStorage
       const storedExpenses = await AsyncStorage.getItem("expenses");
       const parsedExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
 
@@ -133,4 +133,9 @@ export const useExpenseStore = create<ExpenseStore>()((set) => ({
       set({ isLoading: false });
     }
   },
+  init: async () => {
+    await get().fetchExpenses();
+  },
 }));
+
+useExpenseStore.getState().init();
