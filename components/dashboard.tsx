@@ -11,7 +11,7 @@ import {
 import { LineChart } from "react-native-chart-kit";
 
 import { useExpenseStore } from "@/stores/useExpenseStore";
-//
+
 const Dashboard = () => {
   const { expenses, currentDate, currentCurrency } = useExpenseStore();
 
