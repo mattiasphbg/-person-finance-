@@ -2,7 +2,7 @@ import React from "react";
 import { useRef } from "react";
 import { View, Modal, TouchableOpacity, TextInput } from "react-native";
 import { Text } from "../ui/text";
-
+//
 interface AddExpenseModalProps {
   isVisible: boolean;
   hideModal: () => void;
