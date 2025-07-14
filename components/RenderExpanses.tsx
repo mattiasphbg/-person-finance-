@@ -33,7 +33,7 @@ const RenderExpenses = () => {
     addExpense,
     setCurrentCurrency,
   } = useExpenseStore();
-
+  //
   const currencies = [
     { code: "USD", symbol: "$" },
     { code: "EUR", symbol: "€" },
