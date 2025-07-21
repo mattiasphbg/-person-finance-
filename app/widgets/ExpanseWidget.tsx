@@ -5,10 +5,7 @@ import { FlexWidget, TextWidget } from "react-native-android-widget";
 // TODO: a list with all elements added this month
 export default function expanseWidget() {
   return (
-    <FlexWidget
-      clickAction="OPEN_URI"
-      clickActionData={{ uri: "https://www.google.com" }}
-    >
+    <FlexWidget clickAction="directToExpensePage">
       <TextWidget text="Hello" />
     </FlexWidget>
   );

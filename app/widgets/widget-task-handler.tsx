@@ -1,9 +1,9 @@
 import React from "react";
 import type { WidgetTaskHandlerProps } from "react-native-android-widget";
 import expanseWidget from "./ExpanseWidget";
+import ExpensePage from "../(tabs)/expenses";
 
 const nameToWidget = {
-  // Hello will be the **name** with which we will reference our widget.
   Expense: expanseWidget,
 };
 
@@ -18,19 +18,22 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case "WIDGET_UPDATE":
-      // Not needed for now
+      props.renderWidget(<Widget />);
       break;
 
     case "WIDGET_RESIZED":
-      // Not needed for now
+      props.renderWidget(<Widget />);
       break;
 
     case "WIDGET_DELETED":
-      // Not needed for now
       break;
 
     case "WIDGET_CLICK":
-      // Not needed for now
+      console.log("WIDGET_CLICK", props.clickAction);
+      if (props.clickAction === "directToExpensePage") {
+        console.log("directToExpensePage");
+        props.renderWidget(<ExpensePage />);
+      }
       break;
 
     default:
