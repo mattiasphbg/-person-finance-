@@ -10,7 +10,10 @@
     "jsEngine": "hermes",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "edgeToEdgeEnabled": true,
@@ -18,7 +21,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.personfinance"
+      "package": "com.anonymous.personfinance",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
@@ -44,13 +48,13 @@
           "fonts": ["./assets/fonts/SpaceMono-Regular.ttf"],
           "widgets": [
             {
-              "name": "ExpenseWidget",
-              "label": "My Expense Widget",
+              "name": "ExpanseWidget",
+              "label": "add expense",
               "minWidth": "320dp",
               "minHeight": "120dp",
               "targetCellWidth": 5,
               "targetCellHeight": 2,
-              "description": "This is my expense widget",
+              "description": "Quickly add a new expense",
               "previewImage": "./assets/widget-preview/hello.png",
               "updatePeriodMillis": 1800000
             }
@@ -68,6 +72,9 @@
       "eas": {
         "projectId": "972cd1b5-43e4-42d3-8a13-9d841cbda075"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/972cd1b5-43e4-42d3-8a13-9d841cbda075"
     }
   }
 }
