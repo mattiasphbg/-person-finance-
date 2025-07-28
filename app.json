@@ -41,26 +41,7 @@
         }
       ],
       "expo-font",
-      "expo-web-browser",
-      [
-        "react-native-android-widget",
-        {
-          "fonts": ["./assets/fonts/SpaceMono-Regular.ttf"],
-          "widgets": [
-            {
-              "name": "ExpanseWidget",
-              "label": "add expense",
-              "minWidth": "320dp",
-              "minHeight": "120dp",
-              "targetCellWidth": 5,
-              "targetCellHeight": 2,
-              "description": "Quickly add a new expense",
-              "previewImage": "./assets/widget-preview/hello.png",
-              "updatePeriodMillis": 1800000
-            }
-          ]
-        }
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
