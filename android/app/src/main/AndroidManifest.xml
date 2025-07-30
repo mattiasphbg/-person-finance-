@@ -29,7 +29,7 @@
         <data android:scheme="exp+person-finance"/>
       </intent-filter>
     </activity>
-    <receiver android:name=".widget.ExpenseWidget" android:exported="false" android:label="My Expense Widget">
+    <receiver android:name=".widget.ExpenseWidget" android:exported="false" android:label="Expense Widget">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
         <action android:name="com.anonymous.personfinance.WIDGET_CLICK"/>
