@@ -21,7 +21,7 @@
 
     android:description="@string/widget_expensewidget_description"
 
-    android:initialLayout="@layout/rn_widget"
+    android:initialLayout="@layout/alert_title_layout"
 
     android:previewImage="@drawable/expensewidget_preview"
 
