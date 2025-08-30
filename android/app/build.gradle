@@ -1,8 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply plugin: "org.jetbrains.kotlin.plugin.compose"
-
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
@@ -23,7 +21,7 @@ react {
     bundleCommand = "export:embed"
 
     /* Folders */
-     //   The root of your project, i.e. where "package.j+son" lives. Default is '../..'
+     //   The root of your project, i.e. where "package.json" lives. Default is '../..'
     // root = file("../../")
     //   The folder where the react-native NPM package is. Default is ../../node_modules/react-native
     // reactNativeDir = file("../../node_modules/react-native")
@@ -84,21 +82,9 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    buildFeatures {
-        compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     ndkVersion rootProject.ext.ndkVersion
 
-     buildToolsVersion rootProject.ext.buildToolsVersion 
+    buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.anonymous.personfinance'
@@ -165,16 +151,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    // For AppWidgets support
-    implementation "androidx.glance:glance-appwidget:1.1.1"
-
-    // For interop APIs with Material 3
-    implementation "androidx.glance:glance-material3:1.1.1"
-
-    // For interop APIs with Material 2
-    implementation "androidx.glance:glance-material:1.1.1"
-
-
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
@@ -198,6 +174,4 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-
 }
