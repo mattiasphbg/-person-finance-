@@ -54,11 +54,12 @@ const RenderExpenses = () => {
   });
 
   const currentCurrencyExpenses = currentMonthExpenses.filter(
-    (expense) => expense.currency === currentCurrency.code
+    (expense) =>
+      expense.currency === currentCurrency.code && expense.amount != null
   );
 
   const totalExpenses = currentCurrencyExpenses.reduce(
-    (sum, expense) => sum + expense.amount,
+    (sum, expense) => sum + (expense.amount || 0),
     0
   );
 

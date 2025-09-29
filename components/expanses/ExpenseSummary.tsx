@@ -15,7 +15,7 @@ const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({
     <View className="flex-row justify-between items-center mb-5">
       <Text className="text-lg font-bold text-gray-800">
         Total: {currentCurrency.symbol}
-        {totalExpenses.toFixed(2)}
+        {(totalExpenses || 0).toFixed(2)}
       </Text>
     </View>
   );

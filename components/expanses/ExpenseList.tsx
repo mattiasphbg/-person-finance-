@@ -22,7 +22,8 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
   currentCurrency,
 }) => {
   const renderExpenseItem = ({ item }: { item: Expense }) => {
-    if (item.currency !== currentCurrency.code) return null;
+    if (item.currency !== currentCurrency.code || item.amount == null)
+      return null;
 
     return (
       <View className="bg-white p-4 rounded-xl mb-2 flex-row justify-between items-center shadow">
@@ -37,7 +38,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
         <View className="flex-row items-center">
           <Text className="text-base font-semibold text-indigo-600 mr-3">
             {currentCurrency.symbol}
-            {item.amount.toFixed(2)}
+            {(item.amount || 0).toFixed(2)}
           </Text>
           <TouchableOpacity
             className="w-6 h-6 rounded-full bg-red-500 justify-center items-center"

@@ -24,7 +24,8 @@ const Dashboard = () => {
   });
 
   const currentCurrencyExpenses = currentMonthExpenses.filter(
-    (expense) => expense.currency === currentCurrency.code
+    (expense) =>
+      expense.currency === currentCurrency.code && expense.amount != null
   );
 
   const screenWidth = Dimensions.get("window").width;
@@ -40,7 +41,8 @@ const Dashboard = () => {
     const expenseDate = new Date(expense.date);
     if (
       expenseDate.getFullYear() === currentYear &&
-      expense.currency === currentCurrency.code
+      expense.currency === currentCurrency.code &&
+      expense.amount != null
     ) {
       monthlyTotals[expenseDate.getMonth()] += expense.amount;
     }
@@ -69,7 +71,7 @@ const Dashboard = () => {
         strokeWidth: 1,
       },
     ],
-    yAxisLabel: "$",
+    yAxisLabel: currentCurrency.symbol,
     yAxisSuffix: "k",
   };
 
@@ -100,9 +102,9 @@ const Dashboard = () => {
             {getMonthName(monthIndex - 1)} {currentYear}
           </Text>
           <Text className="text-xl font-semibold text-gray-800 mt-0.5">
-            $
+            {currentCurrency.symbol}
             {currentCurrencyExpenses.reduce(
-              (acc, curr) => acc + curr.amount,
+              (acc, curr) => acc + (curr.amount || 0),
               0
             )}
           </Text>
@@ -121,7 +123,7 @@ const Dashboard = () => {
           withOuterLines={false}
           withVerticalLabels={true}
           withHorizontalLabels={true}
-          formatYLabel={(yValue) => `$ ${yValue}`}
+          formatYLabel={(yValue) => `${currentCurrency.symbol} ${yValue}`}
           style={{
             borderRadius: 16,
           }}
@@ -135,9 +137,9 @@ const Dashboard = () => {
               {getMonthName(monthIndex - 1)}
             </Text>
             <Text className="text-lg font-semibold text-gray-800">
-              $
+              {currentCurrency.symbol}
               {currentCurrencyExpenses.reduce(
-                (acc, curr) => acc + curr.amount,
+                (acc, curr) => acc + (curr.amount || 0),
                 0
               )}
             </Text>
@@ -170,7 +172,7 @@ const Dashboard = () => {
               </View>
               <View className="items-end">
                 <Text className="text-base font-medium text-gray-800">
-                  {`${expense.currency} ${expense.amount.toFixed(2)}`}
+                  {`${expense.currency} ${(expense.amount || 0).toFixed(2)}`}
                 </Text>
               </View>
             </View>
