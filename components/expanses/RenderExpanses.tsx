@@ -7,15 +7,15 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
-import { Text } from "./ui/text";
+import { Text } from "../ui/text";
 import { useExpenseStore } from "@/stores/useExpenseStore";
 import React from "react";
-import ExpenseList from "./expanses/ExpenseList";
-import MonthNavigator from "./expanses/MonthNavigator";
-import AddExpenseModal from "./expanses/AddExpenseModal";
-import ExpenseSummary from "./expanses/ExpenseSummary";
+import ExpenseList from "./ExpenseList";
+import MonthNavigator from "./MonthNavigator";
+import AddExpenseModal from "./AddExpenseModal";
+import ExpenseSummary from "./ExpenseSummary";
 
-import ImportExport from "./expanses/importExport";
+import ImportExport from "./importExport";
 
 const RenderExpenses = () => {
   const {
